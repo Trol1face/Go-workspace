@@ -7,8 +7,8 @@ import (
 	"sync"
 )
 
-func CalculateCrc32(crc32 *string, input string, wg *sync.WaitGroup) {
-	*crc32 = DataSignerCrc32(input)
+func CalculateCrc32(variable *string, input string, wg *sync.WaitGroup) {
+	*variable = DataSignerCrc32(input)
 	wg.Done()
 }
 
@@ -65,10 +65,11 @@ func MultiHash(in, out chan interface{}) {
 
 			for i := 0; i <= 5; i++ {
 				wg2.Add(1)
-				go func(i int) {
-					calculations[i] = DataSignerCrc32(strconv.Itoa(i) + data)
-					wg2.Done()
-				}(i)
+				go CalculateCrc32(&calculations[i], strconv.Itoa(i)+data, wg2)
+				// go func(i int) {
+				// 	calculations[i] = DataSignerCrc32(strconv.Itoa(i) + data)
+				// 	wg2.Done()
+				// }(i)
 			}
 
 			wg2.Wait()
