@@ -120,12 +120,12 @@ func ExecutePipeline(jobs ...job) {
 		channels[i+1] = make(chan interface{})
 
 		wg.Add(1)
-		go ExecuteJob(i, jb, channels[i], channels[i+1], wg)
+		go ExecuteJob(jb, channels[i], channels[i+1], wg)
 	}
 	wg.Wait()
 }
 
-func ExecuteJob(i int, job job, in, out chan interface{}, wg *sync.WaitGroup) {
+func ExecuteJob(job job, in, out chan interface{}, wg *sync.WaitGroup) {
 	job(in, out)
 	if out != nil {
 		close(out)
